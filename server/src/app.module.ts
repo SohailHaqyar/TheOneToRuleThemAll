@@ -1,9 +1,11 @@
 import { Module } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { AuthorModule } from './author/author.module';
-import { User } from './users/entities/user.model';
+import { User } from './users/entities/user.entity';
 import { UsersModule } from './users/users.module';
+import { AuthModule } from './auth/auth.module';
+import { PostsModule } from './posts/posts.module';
+import { Post } from './posts/entities/post.entity';
 
 @Module({
   imports: [
@@ -14,18 +16,17 @@ import { UsersModule } from './users/users.module';
       username: 'root',
       password: 'root',
       database: 'db',
-      entities: [User],
+      entities: [User, Post],
       synchronize: true,
       logging: false,
       retryAttempts: 1,
     }),
-    AuthorModule,
     GraphQLModule.forRoot({
-      debug: false,
       autoSchemaFile: true,
-      context: ({ req }) => ({ headers: req.headers }),
     }),
     UsersModule,
+    AuthModule,
+    PostsModule,
   ],
   controllers: [],
   providers: [],
