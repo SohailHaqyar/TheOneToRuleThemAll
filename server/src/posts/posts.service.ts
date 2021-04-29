@@ -13,8 +13,10 @@ export class PostsService {
   ) {}
 
   async getPosts() {
-    const results = await this.postRepository.find({ relations: ['user'] });
-    console.log(results);
+    const results = await this.postRepository.find({
+      relations: ['user'],
+      order: { created_at: 'DESC' },
+    });
     return results;
   }
 
