@@ -6,6 +6,10 @@ import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { PostsModule } from './posts/posts.module';
 import { Post } from './posts/entities/post.entity';
+import { LikesModule } from './likes/likes.module';
+import { CommentsModule } from './comments/comments.module';
+import { Like } from './likes/entities/like.entity';
+import { Comment } from './comments/entities/comment.entity';
 
 @Module({
   imports: [
@@ -16,7 +20,7 @@ import { Post } from './posts/entities/post.entity';
       username: 'root',
       password: 'root',
       database: 'db',
-      entities: [User, Post],
+      entities: [User, Post, Like, Comment],
       synchronize: true,
       logging: false,
       retryAttempts: 1,
@@ -27,6 +31,8 @@ import { Post } from './posts/entities/post.entity';
     UsersModule,
     AuthModule,
     PostsModule,
+    LikesModule,
+    CommentsModule,
   ],
   controllers: [],
   providers: [],
