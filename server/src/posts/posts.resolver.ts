@@ -25,6 +25,7 @@ export class DeleteResponse {
 }
 
 @Resolver(() => Post)
+@UseGuards(GqlAuthGuard)
 export class PostsResolver {
   constructor(private postsService: PostsService) {}
   @Query(() => [Post], { nullable: true })
@@ -34,7 +35,6 @@ export class PostsResolver {
   }
 
   @Query(() => Post)
-  @UseGuards(GqlAuthGuard)
   findOne(
     @GetUser() user: User,
     @Args({ name: 'postId', type: () => String }) postId: string,
@@ -43,7 +43,6 @@ export class PostsResolver {
   }
 
   @Mutation(() => Post)
-  @UseGuards(GqlAuthGuard)
   createPost(
     @GetUser() user: User,
     @Args('createPostInput') createPostInput: CreatePostInput,
@@ -52,7 +51,6 @@ export class PostsResolver {
   }
 
   @Mutation(() => Post)
-  @UseGuards(GqlAuthGuard)
   updatePost(
     @GetUser() user: User,
     @Args('updatePostInput') updatePostInput: UpdatePostInput,
@@ -61,7 +59,6 @@ export class PostsResolver {
   }
 
   @Mutation(() => DeleteResponse)
-  @UseGuards(GqlAuthGuard)
   deletePost(
     @GetUser() user: User,
     @Args({ name: 'postId', type: () => String }) postId: string,

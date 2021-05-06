@@ -1,4 +1,5 @@
 import { Field, ObjectType } from '@nestjs/graphql';
+import { Like } from '../../likes/entities/like.entity';
 import {
   BaseEntity,
   Column,
@@ -30,4 +31,8 @@ export class User extends BaseEntity {
   @Field(() => [Post])
   @OneToMany(() => Post, (post) => post.user)
   posts: Post[];
+
+  @Field(() => [Like])
+  @OneToMany(() => Like, (like) => like.user)
+  likes: Like[];
 }
