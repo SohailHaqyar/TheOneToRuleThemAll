@@ -1,0 +1,18 @@
+query TrendingPosts {
+  findAllTrendingPosts {
+    id
+    created_at
+    title
+    comments {
+      id
+    }
+    likes {
+      id
+    }
+    user {
+      username
+      imageUrl
+      id
+    }
+  }
+}

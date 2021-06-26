@@ -1,0 +1,8 @@
+query AllUsers {
+  users {
+    id
+    username
+    imageUrl
+    email
+  }
+}

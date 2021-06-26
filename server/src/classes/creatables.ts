@@ -3,11 +3,11 @@ import { CreateDateColumn, UpdateDateColumn } from 'typeorm';
 
 @ObjectType()
 export abstract class CreatableEntity {
-  @Field(() => Date)
+  @Field()
   @CreateDateColumn()
   created_at: Date;
 
-  @Field(() => Date)
+  @Field()
   @UpdateDateColumn()
   updated_at: Date;
 }

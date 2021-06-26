@@ -1,22 +1,16 @@
 import React from "react";
+import { Post as PostType } from "../generated/graphql";
 import { Post } from "./Post";
 
 interface Props {
-  data: any[];
+  data: PostType[];
 }
-
-function PostFeed(props: Props) {
-  const { data } = props;
-
+const PostFeed: React.FC<Props> = ({ data }) => {
   return (
-    <main className="lg:col-span-9 xl:col-span-6">
-      <ul className="space-y-4">
-        {data.map((item) => (
-          <Post item={item} key={item.id} />
-        ))}
-      </ul>
-    </main>
+    <ul className="space-y-4">
+      {data && data.map((item) => <Post item={item} key={item.id} />)}
+    </ul>
   );
-}
+};
 
 export default PostFeed;

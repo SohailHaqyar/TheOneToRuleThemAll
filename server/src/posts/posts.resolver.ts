@@ -34,12 +34,15 @@ export class PostsResolver {
     return this.postsService.findAll();
   }
 
+  @Query(() => [Post], { nullable: true })
+  @UseGuards(GqlAuthGuard)
+  findAllTrendingPosts() {
+    return this.postsService.getAllTrending();
+  }
+
   @Query(() => Post)
-  findOne(
-    @GetUser() user: User,
-    @Args({ name: 'postId', type: () => String }) postId: string,
-  ) {
-    return this.postsService.findOne(postId, user);
+  findOnePost(@Args({ name: 'postId', type: () => String }) postId: string) {
+    return this.postsService.findOne(postId);
   }
 
   @Mutation(() => Post)

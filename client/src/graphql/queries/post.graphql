@@ -1,0 +1,31 @@
+query GetPost($postId: String!) {
+  findOnePost(postId: $postId) {
+    id
+    title
+    body
+    user {
+      id
+      username
+      imageUrl
+    }
+    likes {
+      id
+      user {
+        imageUrl
+        username
+        id
+      }
+    }
+    comments {
+      id
+      body
+      user {
+        id
+        imageUrl
+        username
+      }
+      created_at
+    }
+    created_at
+  }
+}

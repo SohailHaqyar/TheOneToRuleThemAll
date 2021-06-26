@@ -1,23 +1,27 @@
 import { Menu, Transition } from "@headlessui/react";
-import React, { Fragment } from "react";
+import { Fragment } from "react";
+import { Link, useHistory } from "react-router-dom";
+// import { CurrentUser } from "../../context/CurrentUserContext";
+import { useMeQuery } from "../../generated/graphql";
 
 function classNames(...classes: any) {
   return classes.filter(Boolean).join(" ");
 }
-const userNavigation = [
-  { name: "Your Profile", href: "#" },
-  { name: "Settings", href: "#" },
-  { name: "Sign out", href: "#" },
-];
-
-const user = {
-  name: "Chelsea Hagon",
-  email: "chelseahagon@example.com",
-  imageUrl:
-    "https://images.unsplash.com/photo-1550525811-e5869dd03032?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-};
 
 export const UserDropdown = () => {
+  const { data, client } = useMeQuery({
+    onError: (error) => {
+      console.log(error.message);
+    },
+  });
+
+  let userNavigation = [
+    { name: "Your Profile", href: "/profile" },
+    { name: "Sign out", href: "/signout" },
+  ];
+
+  userNavigation[0].href = `/user/${data?.me.id}`;
+  const history = useHistory();
   return (
     <Menu as="div" className="flex-shrink-0 relative ml-5">
       {({ open }) => (
@@ -27,7 +31,7 @@ export const UserDropdown = () => {
               <span className="sr-only">Open user menu</span>
               <img
                 className="h-8 w-8 rounded-full"
-                src={user.imageUrl}
+                src={data?.me.imageUrl}
                 alt=""
               />
             </Menu.Button>
@@ -48,17 +52,38 @@ export const UserDropdown = () => {
             >
               {userNavigation.map((item) => (
                 <Menu.Item key={item.name}>
-                  {({ active }) => (
-                    <a
-                      href={item.href}
-                      className={classNames(
-                        active ? "bg-gray-100" : "",
-                        "block py-2 px-4 text-sm text-gray-700"
-                      )}
-                    >
-                      {item.name}
-                    </a>
-                  )}
+                  {({ active }) => {
+                    if (item.name === "Sign out") {
+                      return (
+                        <button
+                          onClick={() => {
+                            client.resetStore();
+                            client.stop();
+                            localStorage.clear();
+                            history.push("/signup");
+                          }}
+                          className={classNames(
+                            active ? "bg-gray-100" : "",
+                            "w-full text-left  block py-2 px-4 text-sm text-gray-700"
+                          )}
+                        >
+                          {item.name}
+                        </button>
+                      );
+                    } else {
+                      return (
+                        <Link
+                          to={item.href}
+                          className={classNames(
+                            active ? "bg-gray-100" : "",
+                            "block py-2 px-4 text-sm text-gray-700"
+                          )}
+                        >
+                          {item.name}
+                        </Link>
+                      );
+                    }
+                  }}
                 </Menu.Item>
               ))}
             </Menu.Items>

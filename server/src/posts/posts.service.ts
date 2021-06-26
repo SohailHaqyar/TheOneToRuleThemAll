@@ -14,17 +14,35 @@ export class PostsService {
     private postRepository: Repository<Post>,
   ) {}
 
-  async findAll(): Promise<Post[]> {
+  async findAll(limit: number = 10): Promise<Post[]> {
     const results = await this.postRepository.find({
       relations: ['user'],
       order: { created_at: 'DESC' },
+      take: limit,
     });
     return results;
   }
 
-  async findOne(postId: string, user: User): Promise<Post> {
-    const post = await this.checkOwnership(postId, user.id, true);
-    if (post) return post as Post;
+  async getAllTrending(): Promise<Post[]> {
+    const posts = await this.findAll();
+    let trending = posts.filter((post) => post.comments.length > 1);
+
+    return trending;
+  }
+
+  async findOne(postId: string): Promise<Post> {
+    const result = await this.postRepository
+      .createQueryBuilder('post')
+      .where('post.id = :postId', { postId })
+      .leftJoinAndSelect('post.comments', 'comments')
+      .leftJoinAndSelect('comments.user', 'commentsUser')
+      .leftJoinAndSelect('post.likes', 'likes')
+      .leftJoinAndSelect('likes.user', 'likesUser')
+      .leftJoinAndSelect('post.user', 'user')
+      .orderBy('comments.created_at', 'DESC')
+      .getOne();
+
+    return result;
   }
 
   async create(createPostInput: CreatePostInput, user: User): Promise<Post> {
