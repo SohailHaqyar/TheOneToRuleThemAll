@@ -1,0 +1,10 @@
+mutation CreateConversation(
+  $createConversationInput: CreateConversationInput!
+) {
+  createConversation(
+    createConversationInput: $createConversationInput
+  ) {
+    id
+    name
+  }
+}

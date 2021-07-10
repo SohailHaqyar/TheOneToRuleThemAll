@@ -10,6 +10,10 @@ import { LikesModule } from './likes/likes.module';
 import { CommentsModule } from './comments/comments.module';
 import { Like } from './likes/entities/like.entity';
 import { Comment } from './comments/entities/comment.entity';
+import { Following } from './users/entities/follow.entity';
+import { ConversationsModule } from './conversations/conversations.module';
+import { Message } from './conversations/entities/messages.entity';
+import { Conversation } from './conversations/entities/conversation.entity';
 
 @Module({
   imports: [
@@ -20,19 +24,24 @@ import { Comment } from './comments/entities/comment.entity';
       username: 'root',
       password: 'root',
       database: 'db',
-      entities: [User, Post, Like, Comment],
+      entities: [User, Post, Like, Comment, Following, Message, Conversation],
       synchronize: true,
       logging: false,
       retryAttempts: 1,
     }),
     GraphQLModule.forRoot({
       autoSchemaFile: true,
+      buildSchemaOptions: {
+        dateScalarMode: 'timestamp',
+      },
+      installSubscriptionHandlers: true,
     }),
     UsersModule,
     AuthModule,
     PostsModule,
     LikesModule,
     CommentsModule,
+    ConversationsModule,
   ],
   controllers: [],
   providers: [],

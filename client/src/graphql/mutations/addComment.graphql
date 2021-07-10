@@ -1,0 +1,10 @@
+mutation AddComment($postId: String!, $body: String!) {
+  addComment(createCommentInput: { postId: $postId, body: $body }) {
+    id
+    body
+    user {
+      username
+      imageUrl
+    }
+  }
+}

@@ -1,0 +1,5 @@
+mutation ContinueWithGoogle($googleIdToken: String!) {
+  continueWithGoogle(googleIdToken: $googleIdToken) {
+    access_token
+  }
+}

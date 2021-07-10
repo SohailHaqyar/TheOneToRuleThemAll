@@ -20,11 +20,11 @@ export class CommentsService {
     const post = await this.postRepository.findOne({ where: { id: postId } });
     // Create the comment
     const comment = await this.commentsRepository.save(
-      this.commentsRepository.create({ post, body }),
+      this.commentsRepository.create({ post, body, user }),
     );
-
     post.comments.unshift(comment);
-    return await this.postRepository.save(post);
+    await this.postRepository.save(post);
+    return comment;
   }
 
   async delete(id: string, user: User) {
@@ -37,5 +37,14 @@ export class CommentsService {
     }
     const result = await this.commentsRepository.delete(id);
     return `Affected Rows: ${result.affected} |`;
+  }
+
+  async getAllUserComments(postId: string) {
+    const result = await this.commentsRepository.find({
+      where: {
+        post: { id: postId },
+      },
+    });
+    return result;
   }
 }

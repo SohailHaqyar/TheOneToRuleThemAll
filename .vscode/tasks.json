@@ -1,0 +1,37 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "type": "npm",
+      "script": "start",
+      "path": "client/",
+      "problemMatcher": [],
+      "label": "npm: start - client",
+      "detail": "craco start"
+    },
+    {
+      "type": "npm",
+      "script": "gen",
+      "path": "client/",
+      "problemMatcher": [],
+      "label": "npm: gen - client",
+      "detail": "graphql-codegen --config codegen.yml"
+    },
+    {
+      "type": "npm",
+      "script": "start",
+      "path": "server/",
+      "problemMatcher": [],
+      "label": "npm: start - server",
+      "detail": "nest start"
+    },
+    {
+      "type": "npm",
+      "script": "start:dev",
+      "path": "server/",
+      "problemMatcher": [],
+      "label": "npm: start:dev - server",
+      "detail": "nest start --watch"
+    }
+  ]
+}

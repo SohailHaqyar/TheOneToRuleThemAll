@@ -1,0 +1,27 @@
+query AllPosts {
+  findAll {
+    title
+    id
+    body
+    user {
+      username
+      imageUrl
+      id
+    }
+
+    created_at
+    likes {
+      id
+    }
+
+    comments {
+      id
+      body
+      user {
+        id
+        username
+        imageUrl
+      }
+    }
+  }
+}

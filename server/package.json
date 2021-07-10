@@ -31,6 +31,7 @@
     "apollo-server-express": "^2.23.0",
     "bcryptjs": "^2.4.3",
     "class-validator": "^0.13.1",
+    "google-auth-library": "^7.0.4",
     "graphql": "^15.5.0",
     "graphql-tools": "^7.0.4",
     "passport": "^0.4.1",

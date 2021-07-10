@@ -19,6 +19,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     email: string;
     sub: string;
   }): Promise<User> | null {
+    /** Returna  User */
     return this.usersService.getUserByEmail(validationPayload.email);
   }
 }

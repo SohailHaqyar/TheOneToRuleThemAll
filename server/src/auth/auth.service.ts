@@ -12,12 +12,12 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
 
-  async validate(email: string, password: string) {
-    const user = await this.usersService.getUserByEmail(email);
-    if (!user) return null;
-    const isValid = await compare(password, user.password);
-    return isValid ? user : null;
-  }
+  // async validate(email: string, password: string) {
+  //   const user = await this.usersService.getUserByEmail(email);
+  //   if (!user) return null;
+  //   const isValid = await compare(password, user.password);
+  //   return isValid ? user : null;
+  // }
 
   login(user: User): { access_token: string } {
     const payload = { email: user.email, sub: user.id };
