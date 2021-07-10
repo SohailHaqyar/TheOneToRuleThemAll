@@ -1,36 +1,42 @@
 import { useEffect } from "react";
 import { createContext } from "react";
-import { useMeLazyQuery, User } from "../generated/graphql";
+import { User } from "../generated/graphql";
+import { useState } from "react";
+import axios from "axios";
 
 interface IContext {
+  user: Partial<User> | null;
   isAuth: boolean;
-  user: Partial<User> | undefined;
-  refetch: any;
+  setAuth?: any;
 }
 export const CurrentUser = createContext({
+  user: null,
   isAuth: false,
-  user: undefined,
-  refetch: () => {},
 } as IContext);
 
 export const CurrentUserProvider: React.FC = ({ children }) => {
-  const [getMe, { data, client }] = useMeLazyQuery({
-    onError: (error) => {
-      console.log(error.message);
-    },
+  const [auth, setAuth] = useState<IContext>({
+    user: null,
+    isAuth: false,
   });
 
+  const getUser = async () => {
+    let token = localStorage.getItem("token");
+    if (token) {
+      const user = await axios.get("http://localhost:4000/users/me", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setAuth({ user: user.data, isAuth: true });
+    }
+  };
   useEffect(() => {
-    getMe();
-    return () => {
-      client?.stop();
-    };
-  }, []);
+    getUser();
+  }, [localStorage.token]);
 
   return (
-    <CurrentUser.Provider
-      value={{ isAuth: !!data, user: data?.me, refetch: getMe }}
-    >
+    <CurrentUser.Provider value={{ ...auth, setAuth }}>
       {children}
     </CurrentUser.Provider>
   );

@@ -19,7 +19,7 @@ function TrendingPost(props: Props) {
         />
       </div>
       <div className="min-w-0 flex-1">
-        <p className="text-sm text-gray-700">{post.title}</p>
+        <p className="text-sm text-gray-700">{post.body}</p>
         <div className="mt-2 flex">
           <span className="inline-flex items-center text-sm">
             <button

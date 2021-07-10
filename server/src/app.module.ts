@@ -11,6 +11,9 @@ import { CommentsModule } from './comments/comments.module';
 import { Like } from './likes/entities/like.entity';
 import { Comment } from './comments/entities/comment.entity';
 import { Following } from './users/entities/follow.entity';
+import { ConversationsModule } from './conversations/conversations.module';
+import { Message } from './conversations/entities/messages.entity';
+import { Conversation } from './conversations/entities/conversation.entity';
 
 @Module({
   imports: [
@@ -21,7 +24,7 @@ import { Following } from './users/entities/follow.entity';
       username: 'root',
       password: 'root',
       database: 'db',
-      entities: [User, Post, Like, Comment, Following],
+      entities: [User, Post, Like, Comment, Following, Message, Conversation],
       synchronize: true,
       logging: false,
       retryAttempts: 1,
@@ -31,12 +34,14 @@ import { Following } from './users/entities/follow.entity';
       buildSchemaOptions: {
         dateScalarMode: 'timestamp',
       },
+      installSubscriptionHandlers: true,
     }),
     UsersModule,
     AuthModule,
     PostsModule,
     LikesModule,
     CommentsModule,
+    ConversationsModule,
   ],
   controllers: [],
   providers: [],

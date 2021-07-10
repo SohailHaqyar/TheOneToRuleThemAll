@@ -6,18 +6,18 @@ import PostFeed from "./PostFeed";
 import { SkeletonPost } from "./Skeletons/SkeletonPost";
 
 export const Home = () => {
-  const [loading, setLoading] = useState(true);
-  let [allPosts, { data, error }] = useAllPostsLazyQuery({
-    fetchPolicy: "network-only",
+  let [allPosts, { data, error, client }] = useAllPostsLazyQuery({
     pollInterval: 60000,
   });
 
+  const [loading, setLoading] = useState(true);
   useEffect(() => {
+    setLoading(true);
     setTimeout(() => {
-      setLoading(true);
       allPosts();
       setLoading(false);
     }, 2000);
+    return () => client?.stop();
   }, [allPosts]);
 
   if (error) console.log(error);

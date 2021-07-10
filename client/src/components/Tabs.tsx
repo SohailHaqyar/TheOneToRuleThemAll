@@ -12,7 +12,7 @@ export const Tabs = ({ posts, followers, followings, user }: any) => {
     switch (current) {
       case "Posts": {
         return (
-          <ul className="space-y-4">
+          <ul className="space-y-2 h-full">
             {posts.map((post: any) => {
               let item = { ...post, user };
               return <Post key={post.id} item={item as any} />;
@@ -33,7 +33,7 @@ export const Tabs = ({ posts, followers, followings, user }: any) => {
   return (
     <div className="hidden sm:block">
       <nav
-        className="relative z-0 rounded-lg mb-2 flex divide-x divide-gray-200"
+        className="relative z-0 rounded-lg mb-2 flex divide-x divide-gray-200 dark:divide-gray-900"
         aria-label="Tabs"
       >
         <div
@@ -42,7 +42,7 @@ export const Tabs = ({ posts, followers, followings, user }: any) => {
             current === "Posts"
               ? "text-gray-900"
               : "text-gray-500 hover:text-gray-700",
-            "group relative min-w-0 flex-1 overflow-hidden bg-white py-4 px-6 text-sm font-medium text-center hover:bg-gray-50 focus:z-10"
+            "group relative min-w-0 flex-1 overflow-hidden bg-white py-4 px-6 text-sm font-medium text-center hover:bg-gray-50 focus:z-10 dark:bg-dracula-700 dark:text-white"
           )}
         >
           <span>Posts</span>
@@ -50,7 +50,7 @@ export const Tabs = ({ posts, followers, followings, user }: any) => {
             aria-hidden="true"
             className={classNames(
               current === "Posts"
-                ? "bg-indigo-500"
+                ? "dark:bg-lightGreen-500 bg-rose-500"
                 : "bg-transparent",
               "absolute inset-x-0 bottom-0 h-0.5"
             )}
@@ -63,7 +63,7 @@ export const Tabs = ({ posts, followers, followings, user }: any) => {
             current === "Followers"
               ? "text-gray-900"
               : "text-gray-500 hover:text-gray-700",
-            "group relative min-w-0 flex-1 overflow-hidden bg-white py-4 px-6 text-sm font-medium text-center hover:bg-gray-50 focus:z-10"
+            "group relative min-w-0 flex-1 overflow-hidden bg-white py-4 px-6 text-sm font-medium text-center hover:bg-gray-50 focus:z-10 dark:bg-dracula-700 dark:text-white dark:border-gray-600"
           )}
         >
           <span>Followers</span>
@@ -71,7 +71,7 @@ export const Tabs = ({ posts, followers, followings, user }: any) => {
             aria-hidden="true"
             className={classNames(
               current === "Followers"
-                ? "bg-indigo-500"
+                ? "dark:bg-lightGreen-500 bg-rose-500"
                 : "bg-transparent",
               "absolute inset-x-0 bottom-0 h-0.5"
             )}
@@ -83,7 +83,7 @@ export const Tabs = ({ posts, followers, followings, user }: any) => {
             current === "Followings"
               ? "text-gray-900"
               : "text-gray-500 hover:text-gray-700",
-            "group relative min-w-0 flex-1 overflow-hidden bg-white py-4 px-6 text-sm font-medium text-center hover:bg-gray-50 focus:z-10"
+            "group relative min-w-0 flex-1 overflow-hidden bg-white py-4 px-6 text-sm font-medium text-center hover:bg-gray-50 focus:z-10 dark:bg-dracula-700 dark:text-white dark:border-gray-600"
           )}
         >
           <span>Followings</span>
@@ -91,7 +91,7 @@ export const Tabs = ({ posts, followers, followings, user }: any) => {
             aria-hidden="true"
             className={classNames(
               current === "Followings"
-                ? "bg-indigo-500"
+                ? "dark:bg-lightGreen-500 bg-rose-500"
                 : "bg-transparent",
               "absolute inset-x-0 bottom-0 h-0.5"
             )}

@@ -7,7 +7,7 @@ interface Props {
 }
 const PostFeed: React.FC<Props> = ({ data }) => {
   return (
-    <ul className="space-y-4">
+    <ul className="space-y-2">
       {data && data.map((item) => <Post item={item} key={item.id} />)}
     </ul>
   );

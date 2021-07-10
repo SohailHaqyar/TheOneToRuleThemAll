@@ -1,4 +1,5 @@
 import React from "react";
+import { Shimmer } from "./Shimmer";
 import { SkeletonElement } from "./SkeletonElement";
 
 export const SkeletonProfile = () => {
@@ -8,13 +9,13 @@ export const SkeletonProfile = () => {
         <div>
           <SkeletonElement type="avatar" />
         </div>
-
         <div>
           <SkeletonElement type="title" />
           <SkeletonElement type="text" />
-          <SkeletonElement type="text" />
         </div>
       </div>
+
+      <Shimmer />
     </div>
   );
 };

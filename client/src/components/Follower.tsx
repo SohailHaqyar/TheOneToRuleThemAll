@@ -1,4 +1,5 @@
 import { useHistory } from "react-router-dom";
+import { Avatar } from "./Avatar";
 
 interface FollowerProps {
   imageUrl: string;
@@ -19,12 +20,8 @@ export const Follower: React.FC<FollowerProps> = ({
         push(`/user/${id}`);
       }}
     >
-      <img src={imageUrl} alt="" className="w-20 " />
+      <Avatar src={imageUrl} size="sm" rounded />
       <h2 className="mt-3 capitalize text-sm">{username}</h2>
-      {/* 
-      <button className="mt-3 font-bold text-sm uppercase hover:text-indigo-600">
-        Follow
-      </button> */}
     </li>
   );
 };

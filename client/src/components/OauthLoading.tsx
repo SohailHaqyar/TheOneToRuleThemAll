@@ -2,13 +2,12 @@ import React from "react";
 import axios from "axios";
 import { useEffect } from "react";
 import { useHistory } from "react-router-dom";
-import { useContext } from "react";
-import { CurrentUser } from "../context/CurrentUserContext";
+import { useAuth } from "../context/AuthContext";
 
 export const OauthLoading = () => {
   let code = window.location.href.split("?")[1];
   const history = useHistory();
-  const { refetch } = useContext(CurrentUser);
+  const { setCurrentUser } = useAuth();
 
   useEffect(() => {
     (async () => {
@@ -18,9 +17,17 @@ export const OauthLoading = () => {
         );
         if (result.data.access_token) {
           localStorage.setItem("token", result.data.access_token);
-          if (refetch !== null) {
-            refetch();
-          }
+
+          const user = await axios.get(
+            "http://localhost:4000/users/me",
+            {
+              headers: {
+                Authorization: `Bearer ${result.data.access_token}`,
+              },
+            }
+          );
+
+          setCurrentUser({ user: user.data, isAuth: true });
           history.push("/");
         }
       } catch (e) {

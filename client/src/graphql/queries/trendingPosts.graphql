@@ -3,8 +3,15 @@ query TrendingPosts {
     id
     created_at
     title
+    body
     comments {
       id
+      body
+      user {
+        id
+        username
+        imageUrl
+      }
     }
     likes {
       id

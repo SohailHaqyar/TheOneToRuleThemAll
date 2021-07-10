@@ -1,6 +1,8 @@
 import React from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useCreatePostMutation } from "../generated/graphql";
+import { MainButton } from "./Buttons/MainButton";
+import { className } from "./TextInput";
 
 type Inputs = {
   title: string;
@@ -11,6 +13,24 @@ interface Props {
   refetch: Function;
 }
 
+let today = new Date();
+
+let checkPostDate = () => {
+  const nextPostDate = new Date(
+    JSON.parse(localStorage.getItem("nextPostDate")!)
+  ).getTime();
+  if (!nextPostDate) {
+    localStorage.setItem(
+      "nextPostDate",
+      JSON.stringify(new Date().setDate(today.getDate() + 1))
+    );
+  }
+  if (today.getTime() < nextPostDate) {
+    return true;
+  } else {
+    return false;
+  }
+};
 export const CreatePostForm: React.FC<Props> = ({ refetch }) => {
   const [createPostMutation, { error }] = useCreatePostMutation();
 
@@ -34,9 +54,13 @@ export const CreatePostForm: React.FC<Props> = ({ refetch }) => {
       if (error) {
         console.log(error);
       }
+      let today = new Date();
+      let tomorrow = new Date();
+      tomorrow.setDate(today.getDate() + 1);
 
-      await refetch();
+      localStorage.setItem("nextPostDate", JSON.stringify(tomorrow));
       reset();
+      await refetch();
     } catch (err) {
       console.log(err.message);
     }
@@ -45,7 +69,7 @@ export const CreatePostForm: React.FC<Props> = ({ refetch }) => {
   return (
     <div className="w-full">
       <form
-        className="bg-white rounded px-8 pt-6 pb-8 mb-4"
+        className="bg-white rounded px-8 pt-6 pb-8 mb-4 dark:bg-dracula-700 dark:text-white"
         onSubmit={handleSubmit(onSubmit)}
       >
         <h2 className="text-center mb-3 text-1xl uppercase">
@@ -54,8 +78,9 @@ export const CreatePostForm: React.FC<Props> = ({ refetch }) => {
         <div className="mb-4">
           <input
             {...register("title", { required: true })}
-            className="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline h-10"
             placeholder="Title"
+            className={className}
+            autoComplete="off"
           />
           {errors.title && (
             <span className="text-red-600">
@@ -65,11 +90,12 @@ export const CreatePostForm: React.FC<Props> = ({ refetch }) => {
         </div>
         <div className="mb-4">
           <input
+            className={className}
             {...register("description", {
               required: true,
             })}
-            className="appearance-none border rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline "
             placeholder="Body"
+            autoComplete="off"
           />
           {errors.description && (
             <span className="text-red-600">
@@ -77,12 +103,11 @@ export const CreatePostForm: React.FC<Props> = ({ refetch }) => {
             </span>
           )}
         </div>
-        <button
-          type="submit"
-          className="bg-transparent font-semibold hover:bg-indigo-600 text-blue-700 hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded text-sm uppercase w-full"
-        >
-          Post
-        </button>
+        <div className="flex items-center  justify-center">
+          <MainButton type="submit" full disabled={checkPostDate()}>
+            Post
+          </MainButton>
+        </div>
       </form>
     </div>
   );

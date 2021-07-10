@@ -1,16 +1,16 @@
-import React, { useContext } from "react";
+import axios from "axios";
 import { GoogleLogin } from "react-google-login";
 import { useHistory } from "react-router";
 import { Redirect } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 import { useContinueWithGoogleMutation } from "../generated/graphql";
-import { isTokenValid } from "../isTokenExpired";
 import GithubLogo from "../github-logo.png";
 import GoogleLogo from "../google-logo.png";
-import { CurrentUser } from "../context/CurrentUserContext";
+
 export const Signup = () => {
   const [login] = useContinueWithGoogleMutation();
   const history = useHistory();
-  const { refetch } = useContext(CurrentUser);
+  const { currentUser, setCurrentUser } = useAuth();
   const handleSuccess = async (response: any) => {
     try {
       const result = await login({
@@ -23,9 +23,19 @@ export const Signup = () => {
           "token",
           result.data?.continueWithGoogle.access_token!
         );
-        if (refetch !== null) {
-          refetch();
-        }
+
+        const user = await axios.get(
+          "http://localhost:4000/users/me",
+          {
+            headers: {
+              Authorization: `Bearer ${result.data?.continueWithGoogle
+                .access_token!}`,
+            },
+          }
+        );
+
+        setCurrentUser({ user: user.data, isAuth: true });
+
         history.push("/");
       }
     } catch (e) {
@@ -36,10 +46,9 @@ export const Signup = () => {
     alert(response.error);
   };
 
-  if (isTokenValid()) {
+  if (currentUser) {
     return <Redirect to="/" />;
   }
-
   return (
     <div className="w-screen h-screen flex items-center justify-center flex-col">
       <GoogleLogin

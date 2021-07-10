@@ -1,0 +1,14 @@
+query GetUserConversations {
+  getUserConvos {
+    id
+    name
+    users {
+      id
+      username
+      imageUrl
+    }
+    messages {
+      body
+    }
+  }
+}

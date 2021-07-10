@@ -26,8 +26,27 @@ export type Comment = {
   user: User;
 };
 
+export type Conversation = {
+  __typename?: 'Conversation';
+  id: Scalars['String'];
+  name: Scalars['String'];
+  users: Array<User>;
+  messages: Array<Message>;
+};
+
 export type CreateCommentInput = {
   postId: Scalars['String'];
+  body: Scalars['String'];
+};
+
+export type CreateConversationInput = {
+  userIds: Array<Scalars['String']>;
+  name: Scalars['String'];
+};
+
+export type CreateMessageInput = {
+  conversationId: Scalars['String'];
+  userId: Scalars['String'];
   body: Scalars['String'];
 };
 
@@ -70,6 +89,16 @@ export type LoginResponse = {
   access_token: Scalars['String'];
 };
 
+export type Message = {
+  __typename?: 'Message';
+  created_at: Scalars['Timestamp'];
+  updated_at: Scalars['Timestamp'];
+  id: Scalars['String'];
+  user: User;
+  conversation: Conversation;
+  body: Scalars['String'];
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
   register: User;
@@ -81,6 +110,8 @@ export type Mutation = {
   likePost: Post;
   addComment: Comment;
   removeComment: Scalars['String'];
+  createConversation: Conversation;
+  message: Message;
 };
 
 
@@ -128,6 +159,16 @@ export type MutationRemoveCommentArgs = {
   commentId: Scalars['String'];
 };
 
+
+export type MutationCreateConversationArgs = {
+  createConversationInput: CreateConversationInput;
+};
+
+
+export type MutationMessageArgs = {
+  createMessageInput: CreateMessageInput;
+};
+
 export type Post = {
   __typename?: 'Post';
   created_at: Scalars['Timestamp'];
@@ -155,6 +196,9 @@ export type Query = {
   findAllTrendingPosts?: Maybe<Array<Post>>;
   findOnePost: Post;
   comments: Array<Comment>;
+  getConvos: Array<Conversation>;
+  getUserConvos: Array<Conversation>;
+  getConvoById: Conversation;
 };
 
 
@@ -182,10 +226,25 @@ export type QueryCommentsArgs = {
   postId: Scalars['String'];
 };
 
+
+export type QueryGetConvoByIdArgs = {
+  conversationId: Scalars['String'];
+};
+
 export type RegisterUserInput = {
   username: Scalars['String'];
   email: Scalars['String'];
   password: Scalars['String'];
+};
+
+export type Subscription = {
+  __typename?: 'Subscription';
+  messageAdded: Message;
+};
+
+
+export type SubscriptionMessageAddedArgs = {
+  conversationId: Scalars['String'];
 };
 
 
@@ -236,6 +295,19 @@ export type ContinueWithGoogleMutation = (
   & { continueWithGoogle: (
     { __typename?: 'LoginResponse' }
     & Pick<LoginResponse, 'access_token'>
+  ) }
+);
+
+export type CreateConversationMutationVariables = Exact<{
+  createConversationInput: CreateConversationInput;
+}>;
+
+
+export type CreateConversationMutation = (
+  { __typename?: 'Mutation' }
+  & { createConversation: (
+    { __typename?: 'Conversation' }
+    & Pick<Conversation, 'id' | 'name'>
   ) }
 );
 
@@ -374,6 +446,24 @@ export type FollowingsQuery = (
   )> }
 );
 
+export type GetUserConversationsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetUserConversationsQuery = (
+  { __typename?: 'Query' }
+  & { getUserConvos: Array<(
+    { __typename?: 'Conversation' }
+    & Pick<Conversation, 'id' | 'name'>
+    & { users: Array<(
+      { __typename?: 'User' }
+      & Pick<User, 'id' | 'username' | 'imageUrl'>
+    )>, messages: Array<(
+      { __typename?: 'Message' }
+      & Pick<Message, 'body'>
+    )> }
+  )> }
+);
+
 export type HelloAuthQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -431,10 +521,14 @@ export type TrendingPostsQuery = (
   { __typename?: 'Query' }
   & { findAllTrendingPosts?: Maybe<Array<(
     { __typename?: 'Post' }
-    & Pick<Post, 'id' | 'created_at' | 'title'>
+    & Pick<Post, 'id' | 'created_at' | 'title' | 'body'>
     & { comments: Array<(
       { __typename?: 'Comment' }
-      & Pick<Comment, 'id'>
+      & Pick<Comment, 'id' | 'body'>
+      & { user: (
+        { __typename?: 'User' }
+        & Pick<User, 'id' | 'username' | 'imageUrl'>
+      ) }
     )>, likes: Array<(
       { __typename?: 'Like' }
       & Pick<Like, 'id'>
@@ -546,6 +640,40 @@ export function useContinueWithGoogleMutation(baseOptions?: Apollo.MutationHookO
 export type ContinueWithGoogleMutationHookResult = ReturnType<typeof useContinueWithGoogleMutation>;
 export type ContinueWithGoogleMutationResult = Apollo.MutationResult<ContinueWithGoogleMutation>;
 export type ContinueWithGoogleMutationOptions = Apollo.BaseMutationOptions<ContinueWithGoogleMutation, ContinueWithGoogleMutationVariables>;
+export const CreateConversationDocument = gql`
+    mutation CreateConversation($createConversationInput: CreateConversationInput!) {
+  createConversation(createConversationInput: $createConversationInput) {
+    id
+    name
+  }
+}
+    `;
+export type CreateConversationMutationFn = Apollo.MutationFunction<CreateConversationMutation, CreateConversationMutationVariables>;
+
+/**
+ * __useCreateConversationMutation__
+ *
+ * To run a mutation, you first call `useCreateConversationMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateConversationMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createConversationMutation, { data, loading, error }] = useCreateConversationMutation({
+ *   variables: {
+ *      createConversationInput: // value for 'createConversationInput'
+ *   },
+ * });
+ */
+export function useCreateConversationMutation(baseOptions?: Apollo.MutationHookOptions<CreateConversationMutation, CreateConversationMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateConversationMutation, CreateConversationMutationVariables>(CreateConversationDocument, options);
+      }
+export type CreateConversationMutationHookResult = ReturnType<typeof useCreateConversationMutation>;
+export type CreateConversationMutationResult = Apollo.MutationResult<CreateConversationMutation>;
+export type CreateConversationMutationOptions = Apollo.BaseMutationOptions<CreateConversationMutation, CreateConversationMutationVariables>;
 export const CreatePostDocument = gql`
     mutation CreatePost($createPostInput: CreatePostInput!) {
   createPost(createPostInput: $createPostInput) {
@@ -868,6 +996,49 @@ export function useFollowingsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions
 export type FollowingsQueryHookResult = ReturnType<typeof useFollowingsQuery>;
 export type FollowingsLazyQueryHookResult = ReturnType<typeof useFollowingsLazyQuery>;
 export type FollowingsQueryResult = Apollo.QueryResult<FollowingsQuery, FollowingsQueryVariables>;
+export const GetUserConversationsDocument = gql`
+    query GetUserConversations {
+  getUserConvos {
+    id
+    name
+    users {
+      id
+      username
+      imageUrl
+    }
+    messages {
+      body
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetUserConversationsQuery__
+ *
+ * To run a query within a React component, call `useGetUserConversationsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetUserConversationsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetUserConversationsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetUserConversationsQuery(baseOptions?: Apollo.QueryHookOptions<GetUserConversationsQuery, GetUserConversationsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetUserConversationsQuery, GetUserConversationsQueryVariables>(GetUserConversationsDocument, options);
+      }
+export function useGetUserConversationsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetUserConversationsQuery, GetUserConversationsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetUserConversationsQuery, GetUserConversationsQueryVariables>(GetUserConversationsDocument, options);
+        }
+export type GetUserConversationsQueryHookResult = ReturnType<typeof useGetUserConversationsQuery>;
+export type GetUserConversationsLazyQueryHookResult = ReturnType<typeof useGetUserConversationsLazyQuery>;
+export type GetUserConversationsQueryResult = Apollo.QueryResult<GetUserConversationsQuery, GetUserConversationsQueryVariables>;
 export const HelloAuthDocument = gql`
     query HelloAuth {
   helloAuth
@@ -1004,8 +1175,15 @@ export const TrendingPostsDocument = gql`
     id
     created_at
     title
+    body
     comments {
       id
+      body
+      user {
+        id
+        username
+        imageUrl
+      }
     }
     likes {
       id

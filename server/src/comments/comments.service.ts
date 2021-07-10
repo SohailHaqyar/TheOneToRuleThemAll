@@ -16,7 +16,6 @@ export class CommentsService {
   ) {}
 
   async create(createCommentInput: CreateCommentInput, user: User) {
-    console.log(user);
     const { postId, body } = createCommentInput;
     const post = await this.postRepository.findOne({ where: { id: postId } });
     // Create the comment
@@ -46,7 +45,6 @@ export class CommentsService {
         post: { id: postId },
       },
     });
-    console.log(result);
     return result;
   }
 }

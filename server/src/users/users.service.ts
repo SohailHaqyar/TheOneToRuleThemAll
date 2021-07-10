@@ -117,7 +117,6 @@ export class UsersService {
       await this.followerRepository.delete(id);
       return { followResults: null, unFollowResults: 'success' };
     } catch (e) {
-      console.log(e.message);
       return { followResults: null, unFollowResults: 'fail' };
     }
   }
@@ -129,7 +128,6 @@ export class UsersService {
         following: { id },
       }),
     );
-    console.log(result);
     return { followResults: result as any, unFollowResults: null };
   }
   async toggleFollow(id: string, userId: string): Promise<FollowRes> {
@@ -213,7 +211,6 @@ export class UsersService {
     // Check if user exists
     const user = await this.getUserByEmail(githubUser.email);
     if (!user) {
-      console.log('new User here');
       const createdUser = await this.usersRepository.save(
         this.usersRepository.create({
           email: githubUser.email,
@@ -226,7 +223,6 @@ export class UsersService {
         access_token: this.jwtService.sign(payload),
       };
     } else {
-      console.log('Existing user');
       const payload = { sub: user.id, email: user.email };
       return {
         access_token: this.jwtService.sign(payload),

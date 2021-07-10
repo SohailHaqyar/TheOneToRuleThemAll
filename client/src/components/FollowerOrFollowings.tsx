@@ -8,8 +8,8 @@ export const FollowerOrFollowings: React.FC<Followers> = ({
   data: followers,
 }) => {
   return (
-    <div className="rounded px-8 pt-6 pb-8 mb-4 bg-white">
-      <ul className="flex bg-white flex-wrap">
+    <div className="rounded px-8 pt-6 pb-8 mb-4 bg-white dark:bg-dracula-700 dark:text-white">
+      <ul className="flex flex-wrap">
         {followers &&
           followers.map((f: User) => (
             <Follower

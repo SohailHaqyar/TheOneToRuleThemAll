@@ -1,18 +1,32 @@
 import { MiniUserCard } from "./MiniUserCard";
-import { useFollowingsQuery } from "../generated/graphql";
+import {
+  useFollowingsLazyQuery,
+  useFollowingsQuery,
+} from "../generated/graphql";
 import { Link } from "react-router-dom";
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { CurrentUser } from "../context/CurrentUserContext";
+import { SkeletonProfile } from "./Skeletons/SkeletonProfile";
 interface Props {
   whoToFollow?: any[];
 }
 
 function WhoToFollow(props: Props) {
   const currentUser = useContext(CurrentUser);
+  const [loading, setLoading] = useState(true);
 
-  const { data, error } = useFollowingsQuery({
+  const [getFollowings, { data, error }] = useFollowingsLazyQuery({
     variables: { id: currentUser.user?.id! },
   });
+
+  useEffect(() => {
+    setTimeout(() => {
+      setLoading(true);
+      getFollowings();
+      setLoading(false);
+    }, 2000);
+  }, [getFollowings]);
+
   if (error) return <div>Error:{error.message}</div>;
 
   return (
@@ -26,11 +40,17 @@ function WhoToFollow(props: Props) {
             Users You're Following
           </h2>
           <div className="mt-6 flow-root">
-            <ul className="-my-4 divide-y divide-gray-200">
-              {data?.getUserFollowings.map((user) => (
-                <MiniUserCard user={user as any} key={user.id} />
-              ))}
-            </ul>
+            {loading ? (
+              [0, 1].map(() => (
+                <SkeletonProfile key={Math.random()} />
+              ))
+            ) : (
+              <ul className="-my-4 divide-y divide-gray-200">
+                {data?.getUserFollowings.map((user) => (
+                  <MiniUserCard user={user as any} key={user.id} />
+                ))}
+              </ul>
+            )}
           </div>
           <div className="mt-6">
             <Link
